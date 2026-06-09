@@ -418,6 +418,10 @@ document.addEventListener('DOMContentLoaded', () => {
     questForm.addEventListener('submit', (e) => {
         e.preventDefault();
         
+        const name = document.getElementById('form-name').value;
+        const email = document.getElementById('form-email').value;
+        const message = document.getElementById('form-message').value;
+
         playSound('powerup');
         
         // Show success
@@ -427,6 +431,15 @@ document.addEventListener('DOMContentLoaded', () => {
         // Award massive coins!
         addCoins(100);
         showToast("QUEST COMPLETE: TRANSMISSION SENT!");
+
+        // Open email client with pre-filled details
+        const subject = encodeURIComponent(`[Winter Studio Quest] Mensaje de ${name}`);
+        const body = encodeURIComponent(`Hola Saoc,\n\nHas recibido un mensaje en tu portafolio:\n\nJUGADOR: ${name}\nEMAIL: ${email}\n\nMENSAJE:\n${message}\n\n---\nTransmisión enviada desde Winter Studio.`);
+        const mailtoUrl = `mailto:winterstudio1108@gmail.com?subject=${subject}&body=${body}`;
+        
+        setTimeout(() => {
+            window.location.href = mailtoUrl;
+        }, 800);
 
         // Simulate network reset
         setTimeout(() => {
@@ -519,6 +532,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Keyboard Event Listeners for Gamepad emulation ---
     window.addEventListener('keydown', (e) => {
+        // Ignore input fields so user can write in forms without triggering actions
+        if (document.activeElement && (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA')) {
+            return;
+        }
+
         // Prevent scrolling with arrows/space in game shell
         if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].indexOf(e.code) > -1) {
             e.preventDefault();
